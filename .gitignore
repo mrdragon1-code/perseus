@@ -1,0 +1,26 @@
+# build
+/target
+/dist
+app/bin/
+app/obj/
+*.user
+.vs/
+
+# modelli scaricati (pesanti, licenze proprie)
+/models/
+
+# MAI nel repository: dati personali / chiavi / biometria
+keystore.json
+config.json
+lockout.json
+journal.json
+vault.lock
+dataset.bin
+*.prs
+*.prs.tmp
+*.dec.tmp
+*.wav
+*.onnx
+enroll/
+faces/
+voices/

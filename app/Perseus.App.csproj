@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PlatformTarget>x64</PlatformTarget>
+    <RootNamespace>Perseus.App</RootNamespace>
+    <AssemblyName>Perseus</AssemblyName>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <RustProfile Condition="'$(Configuration)' == 'Debug'">debug</RustProfile>
+    <RustProfile Condition="'$(Configuration)' != 'Debug'">release</RustProfile>
+    <CargoFlags Condition="'$(Configuration)' != 'Debug'">--release</CargoFlags>
+    <RepoRoot>$(MSBuildThisFileDirectory)..\</RepoRoot>
+    <NativeDll>$(RepoRoot)target\$(RustProfile)\perseus_core.dll</NativeDll>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+  </ItemGroup>
+
+  <!-- Compila il core Rust (rigenera anche Native/PerseusNative.g.cs) e copia la DLL. -->
+  <Target Name="CargoBuild" BeforeTargets="BeforeBuild" Condition="'$(SkipCargo)' != 'true'">
+    <Exec Command="cargo build -p perseus-core $(CargoFlags)" WorkingDirectory="$(RepoRoot)" />
+  </Target>
+  <Target Name="CopyNative" AfterTargets="Build">
+    <Copy SourceFiles="$(NativeDll)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
+  </Target>
+
+</Project>
